@@ -192,29 +192,18 @@ Lista endereços de uma pessoa específica.
 
 ## 🔧 Como Usar
 
-### 1. **Iniciar o Servidor**
-```bash
-cd api_mockada
-source venv/bin/activate
-python src/main.py
-```
+### Docker. configure a porta no compose - IMPORTANTEEEEE 
 
-O servidor estará disponível em: `http://localhost:5001`
-
-### 2. **Acessar a Interface**
-Abra o navegador em `http://localhost:5001` para usar a interface web.
+- **docker build -t api-mockada .** 
+- **docker-compose up -d**
+- **docker-compose logs api** - Dar uma bizulhada nos logs. 
 
 ### 3. **Fazer Login**
 - **Username:** `admin`
 - **Password:** `123456`
 
 
-### Docker.
 
-- **docker build -t api-mockada .**
-- **docker-compose up -d**
-- **docker ps**
-- **docker-compose logs api**
 
 ### 4. **Testar Endpoints**
 Use a interface web ou ferramentas como curl/Postman:
