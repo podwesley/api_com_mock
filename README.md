@@ -4,13 +4,6 @@
 
 API REST mockada completa com endpoints para gerenciamento de pessoas e endereços, incluindo autenticação, simulação de erros e interface web similar ao Postman para testes.
 
-docker build -t api-mockada .
-docker-compose up -d
-docker ps
-docker-compose logs api
-
-
-
 
 ## 🚀 Funcionalidades
 
@@ -214,6 +207,14 @@ Abra o navegador em `http://localhost:5001` para usar a interface web.
 ### 3. **Fazer Login**
 - **Username:** `admin`
 - **Password:** `123456`
+
+
+### Docker.
+
+- **docker build -t api-mockada .**
+- **docker-compose up -d**
+- **docker ps**
+- **docker-compose logs api**
 
 ### 4. **Testar Endpoints**
 Use a interface web ou ferramentas como curl/Postman:

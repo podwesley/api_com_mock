@@ -1,0 +1,20 @@
+# Ambientes Virtuais
+.venv/
+venv/
+env/
+ENV/
+
+# Cache do Python
+__pycache__/
+*.pyc
+
+# Banco de Dados
+# O banco de dados é populado na primeira execução, não deve ser versionado.
+src/database/app.db
+
+# Arquivos de IDE e editores
+.vscode/
+.idea/
+
+# Arquivos de variáveis de ambiente
+.env

@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Tester - Interface Postman</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff6c37;
+            --secondary-color: #2c3e50;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --info-color: #3498db;
+            --dark-bg: #1e1e1e;
+            --sidebar-bg: #252526;
+            --editor-bg: #1e1e1e;
+            --border-color: #3e3e42;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .main-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, var(--primary-color), #ff8c42);
+        }
+
+        .sidebar-header h4 {
+            margin: 0;
+            color: white;
+            font-weight: 600;
+        }
+
+        .collection-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .collection-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .collection-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .method-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .method-get { background-color: var(--success-color); }
+        .method-post { background-color: var(--primary-color); }
+        .method-put { background-color: var(--warning-color); }
+        .method-delete { background-color: var(--danger-color); }
+        .method-patch { background-color: var(--info-color); }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .request-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .request-url {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .method-select {
+            background-color: var(--editor-bg);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            min-width: 100px;
+        }
+
+        .url-input {
+            flex: 1;
+            background-color: var(--editor-bg);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--primary-color), #ff8c42);
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 108, 55, 0.3);
+        }
+
+        .tabs-container {
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-tabs .nav-link {
+            color: #aaa;
+            border: none;
+            background: none;
+            padding: 12px 20px;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            background: none;
+        }
+
+        .tab-content {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .tab-pane {
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .headers-container, .params-container {
+            background-color: var(--editor-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+        }
+
+        .header-row, .param-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .header-input, .param-input {
+            flex: 1;
+            background-color: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .remove-btn {
+            background-color: var(--danger-color);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .add-btn {
+            background-color: var(--success-color);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .json-editor {
+            background-color: var(--editor-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .json-textarea {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+        }
+
+        .response-panel {
+            height: 40%;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--editor-bg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .response-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-200 { background-color: var(--success-color); }
+        .status-201 { background-color: var(--success-color); }
+        .status-400 { background-color: var(--warning-color); }
+        .status-401 { background-color: var(--danger-color); }
+        .status-404 { background-color: var(--danger-color); }
+        .status-500 { background-color: var(--danger-color); }
+
+        .response-content {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .response-tabs {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .response-tabs .nav-link {
+            color: #aaa;
+            border: none;
+            background: none;
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+
+        .response-tabs .nav-link.active {
+            color: var(--primary-color);
+            background-color: rgba(255, 108, 55, 0.1);
+        }
+
+        .response-body {
+            height: calc(100% - 50px);
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .response-json {
+            background-color: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .auth-panel {
+            background-color: var(--editor-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+        }
+
+        .auth-type {
+            margin-bottom: 20px;
+        }
+
+        .auth-input {
+            width: 100%;
+            background-color: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .login-section {
+            background-color: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .token-display {
+            background-color: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            word-break: break-all;
+            margin-top: 10px;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .history-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .history-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .history-method {
+            font-size: 11px;
+            margin-right: 8px;
+        }
+
+        .history-url {
+            font-size: 13px;
+            color: #aaa;
+            font-family: 'Courier New', monospace;
+        }
+
+        .collection-folder {
+            padding: 15px 20px;
+            background-color: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .scrollbar-custom {
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color) transparent;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar-thumb {
+            background-color: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar scrollbar-custom">
+            <div class="sidebar-header">
+                <h4><i class="fas fa-rocket me-2"></i>API Tester</h4>
+            </div>
+            
+            <!-- Login Section -->
+            <div class="login-section">
+                <h6 class="mb-3"><i class="fas fa-key me-2"></i>Autenticação</h6>
+                <div class="mb-2">
+                    <input type="text" id="loginUsername" class="auth-input" placeholder="Username" value="admin">
+                </div>
+                <div class="mb-3">
+                    <input type="password" id="loginPassword" class="auth-input" placeholder="Password" value="123456">
+                </div>
+                <button class="btn btn-primary w-100" onclick="login()">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                </button>
+                <div id="tokenDisplay" class="token-display" style="display: none;"></div>
+            </div>
+
+            <!-- Collections -->
+            <div class="collection-folder">
+                <i class="fas fa-folder me-2"></i>Autenticação
+            </div>
+            <div class="collection-item" onclick="loadRequest('POST', '/api/auth/login', 'Login')">
+                <span class="method-badge method-post">POST</span>
+                <span>Login</span>
+            </div>
+            <div class="collection-item" onclick="loadRequest('POST', '/api/auth/logout', 'Logout')">
+                <span class="method-badge method-post">POST</span>
+                <span>Logout</span>
+            </div>
+            <div class="collection-item" onclick="loadRequest('GET', '/api/auth/me', 'Meu Perfil')">
+                <span class="method-badge method-get">GET</span>
+                <span>Meu Perfil</span>
+            </div>
+
+            <div class="collection-folder">
+                <i class="fas fa-folder me-2"></i>Pessoas
+            </div>
+            <div class="collection-item" onclick="loadRequest('GET', '/api/pessoas', 'Listar Pessoas')">
+                <span class="method-badge method-get">GET</span>
+                <span>Listar Pessoas</span>
+            </div>
+            <div class="collection-item" onclick="loadRequest('GET', '/api/pessoas/1', 'Obter Pessoa')">
+                <span class="method-badge method-get">GET</span>
+                <span>Obter Pessoa</span>
+            </div>
+            <div class="collection-item" onclick="loadRequest('POST', '/api/pessoas', 'Criar Pessoa')">
+                <span class="method-badge method-post">POST</span>
+                <span>Criar Pessoa</span>
+            </div>
+            <div class="collection-item" onclick="loadRequest('PUT', '/api/pessoas/1', 'Atualizar Pessoa')">
+                <span class="method-badge method-put">PUT</span>
+                <span>Atualizar Pessoa</span>
+            </div>
+            <div class="collection-item" onclick="loadRequest('DELETE', '/api/pessoas/1', 'Deletar Pessoa')">
+                <span class="method-badge method-delete">DELETE</span>
+                <span>Deletar Pessoa</span>
+            </div>
+            <div class="collection-item" onclick="loadRequest('GET', '/api/pessoas/stats', 'Estatísticas')">
+                <span class="method-badge method-get">GET</span>
+                <span>Estatísticas</span>
+            </div>
+
+            <div class="collection-folder">
+                <i class="fas fa-folder me-2"></i>Endereços
+            </div>
+            <div class="collection-item" onclick="loadRequest('GET', '/api/enderecos', 'Listar Endereços')">
+                <span class="method-badge method-get">GET</span>
+                <span>Listar Endereços</span>
+            </div>
+            <div class="collection-item" onclick="loadRequest('GET', '/api/enderecos/1', 'Obter Endereço')">
+                <span class="method-badge method-get">GET</span>
+                <span>Obter Endereço</span>
+            </div>
+            <div class="collection-item" onclick="loadRequest('POST', '/api/enderecos', 'Criar Endereço')">
+                <span class="method-badge method-post">POST</span>
+                <span>Criar Endereço</span>
+            </div>
+            <div class="collection-item" onclick="loadRequest('PUT', '/api/enderecos/1', 'Atualizar Endereço')">
+                <span class="method-badge method-put">PUT</span>
+                <span>Atualizar Endereço</span>
+            </div>
+            <div class="collection-item" onclick="loadRequest('DELETE', '/api/enderecos/1', 'Deletar Endereço')">
+                <span class="method-badge method-delete">DELETE</span>
+                <span>Deletar Endereço</span>
+            </div>
+            <div class="collection-item" onclick="loadRequest('GET', '/api/pessoas/1/enderecos', 'Endereços da Pessoa')">
+                <span class="method-badge method-get">GET</span>
+                <span>Endereços da Pessoa</span>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="request-panel">
+                <!-- Request URL -->
+                <div class="request-url">
+                    <select id="methodSelect" class="method-select">
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="PATCH">PATCH</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+                    <input type="text" id="urlInput" class="url-input" placeholder="http://localhost:5001/api/pessoas" value="http://localhost:5001/api/pessoas">
+                    <button class="send-btn" onclick="sendRequest()">
+                        <i class="fas fa-paper-plane me-2"></i>Send
+                    </button>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs" id="requestTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#paramsTab">
+                                <i class="fas fa-list me-2"></i>Params
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#authTab">
+                                <i class="fas fa-shield-alt me-2"></i>Authorization
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#headersTab">
+                                <i class="fas fa-tags me-2"></i>Headers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#bodyTab">
+                                <i class="fas fa-code me-2"></i>Body
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Params Tab -->
+                    <div class="tab-pane fade show active" id="paramsTab">
+                        <div class="params-container scrollbar-custom">
+                            <div id="paramsContainer">
+                                <div class="param-row">
+                                    <input type="text" class="param-input" placeholder="Key" value="page">
+                                    <input type="text" class="param-input" placeholder="Value" value="1">
+                                    <button class="remove-btn" onclick="removeParamRow(this)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                                <div class="param-row">
+                                    <input type="text" class="param-input" placeholder="Key" value="per_page">
+                                    <input type="text" class="param-input" placeholder="Value" value="10">
+                                    <button class="remove-btn" onclick="removeParamRow(this)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button class="add-btn" onclick="addParamRow()">
+                                <i class="fas fa-plus me-2"></i>Add Parameter
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Authorization Tab -->
+                    <div class="tab-pane fade" id="authTab">
+                        <div class="auth-panel">
+                            <div class="auth-type">
+                                <label class="form-label">Type</label>
+                                <select id="authType" class="method-select w-100">
+                                    <option value="bearer">Bearer Token</option>
+                                    <option value="basic">Basic Auth</option>
+                                    <option value="none">No Auth</option>
+                                </select>
+                            </div>
+                            <div id="bearerTokenDiv">
+                                <label class="form-label">Token</label>
+                                <input type="text" id="bearerToken" class="auth-input" placeholder="Enter your bearer token">
+                            </div>
+                            <div id="basicAuthDiv" style="display: none;">
+                                <label class="form-label">Username</label>
+                                <input type="text" id="basicUsername" class="auth-input" placeholder="Username">
+                                <label class="form-label">Password</label>
+                                <input type="password" id="basicPassword" class="auth-input" placeholder="Password">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Headers Tab -->
+                    <div class="tab-pane fade" id="headersTab">
+                        <div class="headers-container scrollbar-custom">
+                            <div id="headersContainer">
+                                <div class="header-row">
+                                    <input type="text" class="header-input" placeholder="Key" value="Content-Type">
+                                    <input type="text" class="header-input" placeholder="Value" value="application/json">
+                                    <button class="remove-btn" onclick="removeHeaderRow(this)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button class="add-btn" onclick="addHeaderRow()">
+                                <i class="fas fa-plus me-2"></i>Add Header
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Body Tab -->
+                    <div class="tab-pane fade" id="bodyTab">
+                        <div class="json-editor">
+                            <textarea id="jsonBody" class="json-textarea" placeholder='{\n  "nome": "João Silva",\n  "email": "joao@email.com",\n  "cpf": "123.456.789-00"\n}'></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Response Panel -->
+            <div class="response-panel">
+                <div class="response-header">
+                    <div>
+                        <h6 class="mb-0"><i class="fas fa-reply me-2"></i>Response</h6>
+                    </div>
+                    <div id="responseStatus"></div>
+                </div>
+                <div class="response-content">
+                    <ul class="nav nav-tabs response-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#responseBodyTab">Body</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#responseHeadersTab">Headers</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="responseBodyTab">
+                            <div class="response-body scrollbar-custom">
+                                <div id="responseJson" class="response-json">
+                                    Clique em "Send" para fazer uma requisição
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="responseHeadersTab">
+                            <div class="response-body scrollbar-custom">
+                                <div id="responseHeaders" class="response-json">
+                                    Headers da resposta aparecerão aqui
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
+
