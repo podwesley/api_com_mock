@@ -110,9 +110,9 @@
         }
 
         .hero h1 {
-            font-size: 4rem;
+            font-size: 3.5rem;
             font-weight: 700;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -121,7 +121,7 @@
         }
 
         .hero p {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             color: var(--text-secondary);
             margin-bottom: 2rem;
             max-width: 600px;
@@ -130,7 +130,7 @@
         .btn-gradient {
             background: var(--gradient-primary);
             border: none;
-            padding: 15px 30px;
+            padding: 14px 28px;
             border-radius: 50px;
             color: white;
             font-weight: 600;
@@ -146,17 +146,43 @@
             color: white;
         }
 
+        .btn-outline-gradient {
+            border: 2px solid transparent;
+            background: linear-gradient(var(--primary-bg), var(--primary-bg)) padding-box, var(--gradient-primary) border-box;
+            color: var(--text-primary);
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-gradient:hover {
+            background: var(--gradient-primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
         /* Section Styling */
         .section {
-            padding: 100px 0;
+            padding: 60px 0; /* Reduced general section padding */
             position: relative;
         }
 
+        .hero {
+            padding-top: 100px; /* Adjusted hero padding */
+        }
+
+        .hero h1 {
+            margin-bottom: 1rem; /* Reduced space below main title */
+        }
+
         .section-title {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
             background: var(--gradient-secondary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -167,7 +193,7 @@
             background: rgba(26, 26, 46, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            padding: 2.5rem;
+            padding: 2rem;
             margin-bottom: 2rem;
             backdrop-filter: blur(10px);
             transition: all 0.3s ease;
@@ -198,7 +224,7 @@
         }
 
         .concept-card h3 {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 600;
             margin-bottom: 1rem;
             color: var(--text-primary);
@@ -211,8 +237,7 @@
 
         /* Code Blocks */
         .code-block {
-            
-            border-radius: 5px;
+            border-radius: 15px;
             margin: 1.5rem 0;
             overflow-x: auto;
             position: relative;
@@ -233,9 +258,10 @@
             color: #f8f8f2;
             font-family: 'Fira Code', 'Courier New', monospace;
             font-size: 0.9rem;
-            background: rgba(26, 26, 46, 0.6);
+            background: rgba(16, 16, 24, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            
+            padding: 1.5rem;
+            border-radius: 15px;
         }
 
         /* Method Cards */
@@ -256,7 +282,7 @@
         .method-badge {
             display: inline-block;
             padding: 8px 16px;
-            border-radius: 25px;
+            border-radius: 5px;
             font-weight: 600;
             font-size: 0.9rem;
             margin-bottom: 1rem;
@@ -270,28 +296,45 @@
 
         /* Status Code Table */
         .status-table {
-            background: rgba(26, 26, 46, 0.8);
-            border-radius: 15px;
+            background: rgba(26, 26, 46, 0.6);
+            border-radius: 10px;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
         }
 
-        .status-table th {
-            background: var(--gradient-primary);
-            color: white;
-            padding: 1rem;
+        .status-table th, .status-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .status-table thead th {
+            background: rgba(26, 26, 46, 0.9);
+            color: var(--text-primary);
             font-weight: 600;
         }
 
-        .status-table td {
-            padding: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-secondary);
+        .status-table tbody tr:last-child td {
+            border-bottom: none;
         }
 
-        .status-table tr:hover {
-            background: rgba(102, 126, 234, 0.1);
+        .status-table tbody tr:hover {
+            background-color: rgba(102, 126, 234, 0.1);
         }
+
+        .status-table .badge {
+            font-size: 0.85rem;
+            padding: 0.4em 0.7em;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .status-table .bg-success { background-color: #43e97b !important; color: #000 !important; }
+        .status-table .bg-warning { background-color: #f093fb !important; color: #000 !important; }
+        .status-table .bg-danger { background-color: #f5576c !important; color: #fff !important; }
 
         /* Floating Elements */
         .floating-element {
@@ -784,8 +827,7 @@ PUT /api/produtos/camiseta-azul</code></pre>
                                 <h4>Request Body</h4>
                                 <p>Dados enviados no corpo da requisição</p>
                                 <div class="code-block">
-                                    <pre><code class="language-json">POST /api/usuarios
-{
+                                    <pre><code class="language-json">{
   "nome": "Ana",
   "email": "ana@email.com",
   "idade": 30
@@ -811,49 +853,47 @@ PUT /api/produtos/camiseta-azul</code></pre>
                         <p>Após processar uma requisição, o servidor envia uma resposta contendo dados solicitados e informações sobre o resultado da operação.</p>
                         
                         <h4>Códigos de Status HTTP</h4>
-                        <div class="table-responsive">
-                            <table class="table status-table">
-                                <thead>
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Significado</th>
-                                        <th>Descrição</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><span class="badge bg-success">200</span></td>
-                                        <td>OK</td>
-                                        <td>Requisição bem-sucedida</td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="badge bg-success">201</span></td>
-                                        <td>Created</td>
-                                        <td>Recurso criado com sucesso</td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="badge bg-warning">400</span></td>
-                                        <td>Bad Request</td>
-                                        <td>Sintaxe inválida na requisição</td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="badge bg-warning">401</span></td>
-                                        <td>Unauthorized</td>
-                                        <td>Autenticação necessária</td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="badge bg-warning">404</span></td>
-                                        <td>Not Found</td>
-                                        <td>Recurso não encontrado</td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="badge bg-danger">500</span></td>
-                                        <td>Internal Server Error</td>
-                                        <td>Erro interno do servidor</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <table class="status-table">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Significado</th>
+                                    <th>Descrição</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge bg-success">200</span></td>
+                                    <td>OK</td>
+                                    <td>Requisição bem-sucedida</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-success">201</span></td>
+                                    <td>Created</td>
+                                    <td>Recurso criado com sucesso</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-warning">400</span></td>
+                                    <td>Bad Request</td>
+                                    <td>Sintaxe inválida na requisição</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-warning">401</span></td>
+                                    <td>Unauthorized</td>
+                                    <td>Autenticação necessária</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-warning">404</span></td>
+                                    <td>Not Found</td>
+                                    <td>Recurso não encontrado</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-danger">500</span></td>
+                                    <td>Internal Server Error</td>
+                                    <td>Erro interno do servidor</td>
+                                </tr>
+                            </tbody>
+                        </table>
                         
                         <h4>Exemplo de Resposta</h4>
                         <div class="code-block">
@@ -1126,8 +1166,10 @@ app.post('/webhook/novo-pedido', (req, res) => {
   processarPedido(pedido);
   res.status(200).send('OK');
 });
-
-// Registrar webhook
+</code></pre>
+                                </div>
+                                <div class="code-block">
+                                    <pre><code class="language-bash">// Registrar webhook
 POST /api/webhooks
 {
   "url": "https://meuapp.com/webhook/novo-pedido",
