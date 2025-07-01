@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso Básico de APIs - Conceitos Fundamentais</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0a0a0f;
+            --secondary-bg: #1a1a2e;
+            --accent-bg: #16213e;
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8b8;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-tertiary: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-quaternary: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-link {
+            color: var(--text-secondary) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary) !important;
+            transform: translateY(-2px);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: var(--gradient-primary);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: radial-gradient(ellipse at center, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .btn-gradient {
+            background: var(--gradient-primary);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        /* Section Styling */
+        .section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: var(--gradient-secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .concept-card {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .concept-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .concept-card h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .concept-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: rgba(16, 16, 24, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-tertiary);
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: #f8f8f2;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        /* Method Cards */
+        .method-card {
+            background: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .method-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .method-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .method-get { background: var(--gradient-quaternary); color: #000; }
+        .method-post { background: var(--gradient-secondary); color: #fff; }
+        .method-put { background: var(--gradient-tertiary); color: #000; }
+        .method-patch { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); color: #000; }
+        .method-delete { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #000; }
+
+        /* Status Code Table */
+        .status-table {
+            background: rgba(26, 26, 46, 0.8);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-table th {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 1rem;
+            font-weight: 600;
+        }
+
+        .status-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+        }
+
+        .status-table tr:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .floating-element:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .concept-card {
+                padding: 1.5rem;
+            }
+
+            .navbar-nav {
+                background: rgba(26, 26, 46, 0.95);
+                border-radius: 10px;
+                margin-top: 1rem;
+                padding: 1rem;
+            }
+        }
+
+        /* Scroll Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--gradient-primary);
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+
+        /* Table of Contents */
+        .toc {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(26, 26, 46, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .toc h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .toc ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc li {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .toc a:hover {
+            color: var(--text-primary);
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        @media (max-width: 1200px) {
+            .toc {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#home">API Course</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#introducao">Introdução</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#metodos">Métodos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#headers">Headers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#parametros">Parâmetros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#response">Response</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#autenticacao">Autenticação</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Table of Contents -->
+    <div class="toc">
+        <h4>Índice</h4>
+        <ul>
+            <li><a href="#introducao">Introdução às APIs</a></li>
+            <li><a href="#metodos">Métodos HTTP</a></li>
+            <li><a href="#headers">Headers HTTP</a></li>
+            <li><a href="#parametros">Parâmetros</a></li>
+            <li><a href="#response">Response & Status</a></li>
+            <li><a href="#autenticacao">Autenticação</a></li>
+            <li><a href="#formatos">Formatos de Dados</a></li>
+            <li><a href="#endpoints">Endpoints</a></li>
+            <li><a href="#rate-limiting">Rate Limiting</a></li>
+            <li><a href="#webhooks">Webhooks</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <h1>Curso Básico de APIs</h1>
+                        <p>Aprenda os conceitos fundamentais de APIs de forma prática e objetiva. Desde métodos HTTP até autenticação, tudo que você precisa saber para começar.</p>
+                        <a href="#introducao" class="btn-gradient">Começar o Curso</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="code-block">
+                        <pre><code>{
+  "curso": "APIs Básico",
+  "topicos": [
+    "Métodos HTTP",
+    "Headers",
+    "Autenticação",
+    "Response Codes"
+  ],
+  "nivel": "Iniciante",
+  "duracao": "2 horas"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section id="introducao" class="section">
+        <div class="container">
+            <h2 class="section-title">O que é uma API?</h2>
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="concept-card">
+                        <h3>Interface de Programação de Aplicações</h3>
+                        <p>Uma API (Interface de Programação de Aplicações) é um conjunto de definições e protocolos que permite que diferentes softwares se comuniquem entre si. Pense nela como um "garçom" em um restaurante: você (o cliente) faz um pedido (requisição) ao garçom (API), que leva seu pedido à cozinha (servidor) e traz de volta o que você pediu (resposta).</p>
+                        
+                        <h4>Por que as APIs são importantes?</h4>
+                        <ul>
+                            <li><strong>Reutilização de Código:</strong> Desenvolvedores podem usar funcionalidades existentes sem recriá-las</li>
+                            <li><strong>Integração Simplificada:</strong> Sistemas diferentes podem conversar de forma padronizada</li>
+                            <li><strong>Inovação:</strong> Facilitam a criação de novos produtos combinando funcionalidades</li>
+                            <li><strong>Eficiência:</strong> Agilizam o desenvolvimento e manutenção de software</li>
+                        </ul>
+
+                        <div class="code-block">
+                            <pre><code>// Exemplo de requisição API
+fetch('https://api.exemplo.com/usuarios')
+  .then(response => response.json())
+  .then(data => console.log(data));</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HTTP Methods Section -->
+    <section id="metodos" class="section">
+        <div class="container">
+            <h2 class="section-title">Métodos HTTP</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <p class="text-center mb-5" style="color: var(--text-secondary); font-size: 1.1rem;">
+                        Os métodos HTTP indicam a ação que se deseja realizar em um recurso específico. São os "verbos" da comunicação API.
+                    </p>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="method-card">
+                                <div class="method-badge method-get">GET</div>
+                                <h4>Buscar Dados</h4>
+                                <p>Solicita dados de um recurso específico. É seguro e idempotente.</p>
+                                <div class="code-block">
+                                    <pre><code>GET /api/usuarios/123</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="method-card">
+                                <div class="method-badge method-post">POST</div>
+                                <h4>Criar Dados</h4>
+                                <p>Envia dados para criar um novo recurso no servidor.</p>
+                                <div class="code-block">
+                                    <pre><code>POST /api/usuarios
+{
+  "nome": "João",
+  "email": "joao@email.com"
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="method-card">
+                                <div class="method-badge method-put">PUT</div>
+                                <h4>Atualizar Completamente</h4>
+                                <p>Substitui completamente um recurso existente.</p>
+                                <div class="code-block">
+                                    <pre><code>PUT /api/usuarios/123
+{
+  "nome": "João Silva",
+  "email": "joao.silva@email.com"
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="method-card">
+                                <div class="method-badge method-patch">PATCH</div>
+                                <h4>Atualizar Parcialmente</h4>
+                                <p>Aplica modificações parciais a um recurso.</p>
+                                <div class="code-block">
+                                    <pre><code>PATCH /api/usuarios/123
+{
+  "email": "novo@email.com"
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="method-card">
+                                <div class="method-badge method-delete">DELETE</div>
+                                <h4>Remover Dados</h4>
+                                <p>Remove um recurso específico do servidor.</p>
+                                <div class="code-block">
+                                    <pre><code>DELETE /api/usuarios/123</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Headers Section -->
+    <section id="headers" class="section">
+        <div class="container">
+            <h2 class="section-title">Headers HTTP</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="concept-card">
+                        <h3>Metadados da Comunicação</h3>
+                        <p>Os Headers HTTP são pares de chave-valor que transmitem metadados sobre a requisição ou resposta. Eles fornecem informações adicionais que não fazem parte do corpo da mensagem.</p>
+                        
+                        <h4>Headers Comuns de Requisição</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="code-block">
+                                    <pre><code>Content-Type: application/json
+Accept: application/json
+Authorization: Bearer token123
+User-Agent: MeuApp/1.0</code></pre>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <ul>
+                                    <li><strong>Content-Type:</strong> Formato dos dados enviados</li>
+                                    <li><strong>Accept:</strong> Formato preferido da resposta</li>
+                                    <li><strong>Authorization:</strong> Credenciais de autenticação</li>
+                                    <li><strong>User-Agent:</strong> Identificação do cliente</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <h4>Headers Comuns de Resposta</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="code-block">
+                                    <pre><code>Content-Type: application/json
+Content-Length: 1234
+Cache-Control: no-cache
+Server: nginx/1.18</code></pre>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <ul>
+                                    <li><strong>Content-Type:</strong> Formato dos dados retornados</li>
+                                    <li><strong>Content-Length:</strong> Tamanho da resposta</li>
+                                    <li><strong>Cache-Control:</strong> Diretivas de cache</li>
+                                    <li><strong>Server:</strong> Informações do servidor</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parameters Section -->
+    <section id="parametros" class="section">
+        <div class="container">
+            <h2 class="section-title">Parâmetros em APIs</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="concept-card">
+                        <h3>Personalizando Requisições</h3>
+                        <p>Parâmetros são informações adicionais enviadas para que o servidor saiba exatamente o que você deseja ou para fornecer dados que serão processados.</p>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-4">
+                                <h4>Query Parameters</h4>
+                                <p>Anexados ao final da URL após um "?"</p>
+                                <div class="code-block">
+                                    <pre><code>GET /api/produtos?
+categoria=eletronicos&
+ordenar_por=preco&
+limite=10</code></pre>
+                                </div>
+                                <small class="text-muted">Usado para filtros, ordenação e paginação</small>
+                            </div>
+                            
+                            <div class="col-md-4 mb-4">
+                                <h4>Path Parameters</h4>
+                                <p>Incorporados na estrutura da URL</p>
+                                <div class="code-block">
+                                    <pre><code>GET /api/usuarios/123
+PUT /api/produtos/camiseta-azul</code></pre>
+                                </div>
+                                <small class="text-muted">Usado para identificar recursos específicos</small>
+                            </div>
+                            
+                            <div class="col-md-4 mb-4">
+                                <h4>Request Body</h4>
+                                <p>Dados enviados no corpo da requisição</p>
+                                <div class="code-block">
+                                    <pre><code>POST /api/usuarios
+{
+  "nome": "Ana",
+  "email": "ana@email.com",
+  "idade": 30
+}</code></pre>
+                                </div>
+                                <small class="text-muted">Usado para dados complexos ou grandes volumes</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Response Section -->
+    <section id="response" class="section">
+        <div class="container">
+            <h2 class="section-title">Response & Status Codes</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="concept-card">
+                        <h3>Entendendo as Respostas</h3>
+                        <p>Após processar uma requisição, o servidor envia uma resposta contendo dados solicitados e informações sobre o resultado da operação.</p>
+                        
+                        <h4>Códigos de Status HTTP</h4>
+                        <div class="table-responsive">
+                            <table class="table status-table">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Significado</th>
+                                        <th>Descrição</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge bg-success">200</span></td>
+                                        <td>OK</td>
+                                        <td>Requisição bem-sucedida</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-success">201</span></td>
+                                        <td>Created</td>
+                                        <td>Recurso criado com sucesso</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-warning">400</span></td>
+                                        <td>Bad Request</td>
+                                        <td>Sintaxe inválida na requisição</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-warning">401</span></td>
+                                        <td>Unauthorized</td>
+                                        <td>Autenticação necessária</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-warning">404</span></td>
+                                        <td>Not Found</td>
+                                        <td>Recurso não encontrado</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-danger">500</span></td>
+                                        <td>Internal Server Error</td>
+                                        <td>Erro interno do servidor</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <h4>Exemplo de Resposta</h4>
+                        <div class="code-block">
+                            <pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 156
+
+{
+  "id": 123,
+  "nome": "João da Silva",
+  "email": "joao@email.com",
+  "ativo": true,
+  "criado_em": "2024-01-15T10:30:00Z"
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Authentication Section -->
+    <section id="autenticacao" class="section">
+        <div class="container">
+            <h2 class="section-title">Autenticação em APIs</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="concept-card">
+                        <h3>Protegendo o Acesso</h3>
+                        <p>A autenticação verifica a identidade de um cliente que tenta acessar uma API, garantindo que apenas usuários autorizados possam interagir com os recursos.</p>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <h4>API Key</h4>
+                                <p>Token único que identifica o projeto ou aplicação</p>
+                                <div class="code-block">
+                                    <pre><code>GET /api/dados
+X-API-Key: sua_chave_aqui</code></pre>
+                                </div>
+                                <small class="text-muted">✅ Simples de implementar<br>❌ Menos segura</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <h4>Bearer Token</h4>
+                                <p>Token de acesso obtido após autenticação</p>
+                                <div class="code-block">
+                                    <pre><code>GET /api/perfil
+Authorization: Bearer eyJhbGc...</code></pre>
+                                </div>
+                                <small class="text-muted">✅ Mais seguro<br>✅ Tempo de vida limitado</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <h4>Basic Auth</h4>
+                                <p>Usuário e senha codificados em Base64</p>
+                                <div class="code-block">
+                                    <pre><code>GET /api/recursos
+Authorization: Basic dXN1YXJpbz...</code></pre>
+                                </div>
+                                <small class="text-muted">✅ Amplamente suportado<br>❌ Apenas codificado</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <h4>OAuth 2.0</h4>
+                                <p>Framework de autorização para acesso delegado</p>
+                                <div class="code-block">
+                                    <pre><code>// Fluxo OAuth
+1. Autorização
+2. Troca por token
+3. Uso do token</code></pre>
+                                </div>
+                                <small class="text-muted">✅ Muito seguro<br>❌ Mais complexo</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Formats Section -->
+    <section id="formatos" class="section">
+        <div class="container">
+            <h2 class="section-title">Formatos de Dados</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="concept-card">
+                                <h3>JSON</h3>
+                                <p>JavaScript Object Notation - formato leve e fácil de ler</p>
+                                <div class="code-block">
+                                    <pre><code>{
+  "nome": "Alice",
+  "idade": 30,
+  "cidade": "São Paulo",
+  "interesses": ["leitura", "viagem"],
+  "ativo": true
+}</code></pre>
+                                </div>
+                                <ul>
+                                    <li>✅ Leve e compacto</li>
+                                    <li>✅ Fácil de ler</li>
+                                    <li>✅ Integração nativa com JavaScript</li>
+                                    <li>✅ Amplamente adotado</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="concept-card">
+                                <h3>XML</h3>
+                                <p>Extensible Markup Language - formato estruturado com tags</p>
+                                <div class="code-block">
+                                    <pre><code>&lt;pessoa&gt;
+  &lt;nome&gt;Bob&lt;/nome&gt;
+  &lt;idade&gt;25&lt;/idade&gt;
+  &lt;cidade&gt;Rio de Janeiro&lt;/cidade&gt;
+  &lt;interesses&gt;
+    &lt;interesse&gt;música&lt;/interesse&gt;
+    &lt;interesse&gt;esportes&lt;/interesse&gt;
+  &lt;/interesses&gt;
+&lt;/pessoa&gt;</code></pre>
+                                </div>
+                                <ul>
+                                    <li>✅ Extensível</li>
+                                    <li>✅ Validação de esquema</li>
+                                    <li>❌ Mais verboso</li>
+                                    <li>❌ Menos popular em APIs REST</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Endpoints Section -->
+    <section id="endpoints" class="section">
+        <div class="container">
+            <h2 class="section-title">Endpoints e URLs</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="concept-card">
+                        <h3>Onde as APIs Residem</h3>
+                        <p>Para interagir com uma API, você precisa saber onde ela "mora" na internet. É aí que entram os conceitos de URL e Endpoint.</p>
+                        
+                        <h4>Estrutura de uma URL de API</h4>
+                        <div class="code-block">
+                            <pre><code>https://api.example.com/v1/usuarios/123?incluir_pedidos=true
+│      │               │  │        │   │
+│      │               │  │        │   └─ Query Parameter
+│      │               │  │        └─ Path Parameter (ID)
+│      │               │  └─ Recurso
+│      │               └─ Versão da API
+│      └─ Domínio da API
+└─ Protocolo (HTTPS)</code></pre>
+                        </div>
+                        
+                        <h4>Exemplos de Endpoints</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="code-block">
+                                    <pre><code>GET /produtos
+GET /produtos/123
+POST /produtos
+PUT /produtos/123
+DELETE /produtos/123</code></pre>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="code-block">
+                                    <pre><code>GET /usuarios
+GET /usuarios/456/pedidos
+POST /usuarios/456/pedidos
+GET /categorias
+POST /auth/login</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rate Limiting Section -->
+    <section id="rate-limiting" class="section">
+        <div class="container">
+            <h2 class="section-title">Rate Limiting</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="concept-card">
+                        <h3>Gerenciando o Uso da API</h3>
+                        <p>Rate Limiting é uma estratégia para controlar o número de requisições que um cliente pode fazer a uma API dentro de um período de tempo determinado.</p>
+                        
+                        <h4>Por que é importante?</h4>
+                        <ul>
+                            <li><strong>Prevenção de Abuso:</strong> Impede sobrecarga do servidor</li>
+                            <li><strong>Qualidade de Serviço:</strong> Garante disponibilidade para todos</li>
+                            <li><strong>Controle de Custos:</strong> Gerencia recursos computacionais</li>
+                            <li><strong>Políticas de Uso:</strong> Aplica limites por plano de assinatura</li>
+                        </ul>
+                        
+                        <h4>Headers de Rate Limiting</h4>
+                        <div class="code-block">
+                            <pre><code>HTTP/1.1 200 OK
+X-RateLimit-Limit: 60
+X-RateLimit-Remaining: 58
+X-RateLimit-Reset: 1678886400
+
+{
+  "data": "..."
+}</code></pre>
+                        </div>
+                        
+                        <h4>Resposta quando limite é excedido</h4>
+                        <div class="code-block">
+                            <pre><code>HTTP/1.1 429 Too Many Requests
+X-RateLimit-Limit: 60
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 1678886460
+
+{
+  "error": "Rate limit exceeded",
+  "message": "Try again in 60 seconds"
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Webhooks Section -->
+    <section id="webhooks" class="section">
+        <div class="container">
+            <h2 class="section-title">Webhooks</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="concept-card">
+                        <h3>APIs Reativas e Notificações em Tempo Real</h3>
+                        <p>Enquanto APIs tradicionais funcionam com requisição-resposta, Webhooks operam de forma inversa: o servidor "empurra" dados para o cliente quando algo acontece.</p>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>API Tradicional (Polling)</h4>
+                                <div class="code-block">
+                                    <pre><code>// Cliente pergunta constantemente
+setInterval(() => {
+  fetch('/api/novos-pedidos')
+    .then(response => response.json())
+    .then(data => {
+      if (data.length > 0) {
+        processarPedidos(data);
+      }
+    });
+}, 5000); // A cada 5 segundos</code></pre>
+                                </div>
+                                <small class="text-muted">❌ Ineficiente<br>❌ Não é tempo real</small>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h4>Webhook</h4>
+                                <div class="code-block">
+                                    <pre><code>// Servidor notifica quando acontece
+app.post('/webhook/novo-pedido', (req, res) => {
+  const pedido = req.body;
+  processarPedido(pedido);
+  res.status(200).send('OK');
+});
+
+// Registrar webhook
+POST /api/webhooks
+{
+  "url": "https://meuapp.com/webhook/novo-pedido",
+  "eventos": ["pedido.criado"]
+}</code></pre>
+                                </div>
+                                <small class="text-muted">✅ Eficiente<br>✅ Tempo real</small>
+                            </div>
+                        </div>
+                        
+                        <h4>Como Funcionam os Webhooks</h4>
+                        <ol>
+                            <li><strong>Registro:</strong> Você registra uma URL de callback</li>
+                            <li><strong>Evento:</strong> Algo acontece no sistema monitorado</li>
+                            <li><strong>Notificação:</strong> O sistema envia dados para sua URL</li>
+                            <li><strong>Processamento:</strong> Sua aplicação processa os dados</li>
+                        </ol>
+                        
+                        <h4>Casos de Uso</h4>
+                        <ul>
+                            <li>Notificações de pagamento processado</li>
+                            <li>Sincronização de dados entre sistemas</li>
+                            <li>Automação de fluxos de trabalho</li>
+                            <li>Atualizações de status em tempo real</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="section" style="background: var(--secondary-bg); padding: 50px 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h3 style="margin-bottom: 1rem;">Parabéns! 🎉</h3>
+                    <p style="color: var(--text-secondary); font-size: 1.1rem;">
+                        Você completou o curso básico de APIs. Agora você tem o conhecimento fundamental para começar a trabalhar com APIs de forma eficiente e segura.
+                    </p>
+                    <div style="margin-top: 2rem;">
+                        <a href="#home" class="btn-gradient">Voltar ao Início</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.offsetHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+        });
+
+        // Navbar background on scroll
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(26, 26, 46, 0.98)';
+            } else {
+                navbar.style.background = 'rgba(26, 26, 46, 0.95)';
+            }
+        });
+
+        // Add animation to cards when they come into view
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.concept-card, .method-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
+
