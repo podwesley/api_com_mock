@@ -211,10 +211,8 @@
 
         /* Code Blocks */
         .code-block {
-            background: rgba(16, 16, 24, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 1.5rem;
+            
+            border-radius: 5px;
             margin: 1.5rem 0;
             overflow-x: auto;
             position: relative;
@@ -235,6 +233,9 @@
             color: #f8f8f2;
             font-family: 'Fira Code', 'Courier New', monospace;
             font-size: 0.9rem;
+            background: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            
         }
 
         /* Method Cards */
@@ -330,32 +331,6 @@
             50% { transform: translateY(-20px) rotate(180deg); }
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1.1rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .concept-card {
-                padding: 1.5rem;
-            }
-
-            .navbar-nav {
-                background: rgba(26, 26, 46, 0.95);
-                border-radius: 10px;
-                margin-top: 1rem;
-                padding: 1rem;
-            }
-        }
-
         /* Scroll Progress Bar */
         .progress-bar {
             position: fixed;
@@ -415,9 +390,116 @@
             background: rgba(102, 126, 234, 0.1);
         }
 
-        @media (max-width: 1200px) {
+        .text-muted {
+            color: var(--text-secondary) !important;
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1199.98px) {
             .toc {
                 display: none;
+            }
+        }
+
+        @media (max-width: 991.98px) {
+            .hero {
+                padding-top: 120px; /* Space for navbar */
+                text-align: center;
+            }
+
+            .hero .hero-content {
+                margin-bottom: 3rem;
+            }
+
+            .hero p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .row .col-lg-6:last-child .code-block {
+                margin-top: 2rem;
+            }
+
+            .navbar-nav {
+                background: rgba(26, 26, 46, 0.98);
+                border-radius: 10px;
+                margin-top: 1rem;
+                padding: 1rem;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .navbar-nav .nav-item {
+                margin-bottom: 0.5rem;
+            }
+
+            .navbar-nav .nav-link {
+                padding: 0.75rem 1rem;
+                border-radius: 8px;
+                transition: background-color 0.3s ease;
+            }
+
+            .navbar-nav .nav-link:hover {
+                background-color: rgba(102, 126, 234, 0.1);
+                transform: none; /* Reset transform for this view */
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            body {
+                font-size: 15px;
+            }
+
+            .hero {
+                min-height: auto;
+                padding-bottom: 60px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section {
+                padding: 60px 0;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+                margin-bottom: 2rem;
+            }
+
+            .concept-card {
+                padding: 1.5rem;
+            }
+            
+            .method-card, .concept-card {
+                margin-bottom: 1.5rem;
+            }
+
+            #headers .row .col-md-6:last-child,
+            #formatos .row .col-md-6:last-child,
+            #webhooks .row .col-md-6:last-child {
+                margin-top: 1.5rem;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .concept-card h3 {
+                font-size: 1.5rem;
+            }
+            .btn-gradient {
+                padding: 12px 25px;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -427,7 +509,7 @@
     <div class="progress-bar" id="progressBar"></div>
 
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
         <div class="container">
             <a class="navbar-brand" href="#home">API Course</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -481,7 +563,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="code-block">
-                        <pre><code>{
+                        <pre><code class="language-json">{
   "curso": "APIs Básico",
   "topicos": [
     "Métodos HTTP",
@@ -517,7 +599,7 @@
                         </ul>
 
                         <div class="code-block">
-                            <pre><code>// Exemplo de requisição API
+                            <pre><code class="language-javascript">// Exemplo de requisição API
 fetch('https://api.exemplo.com/usuarios')
   .then(response => response.json())
   .then(data => console.log(data));</code></pre>
@@ -545,7 +627,7 @@ fetch('https://api.exemplo.com/usuarios')
                                 <h4>Buscar Dados</h4>
                                 <p>Solicita dados de um recurso específico. É seguro e idempotente.</p>
                                 <div class="code-block">
-                                    <pre><code>GET /api/usuarios/123</code></pre>
+                                    <pre><code class="language-bash">GET /api/usuarios/123</code></pre>
                                 </div>
                             </div>
                         </div>
@@ -556,7 +638,7 @@ fetch('https://api.exemplo.com/usuarios')
                                 <h4>Criar Dados</h4>
                                 <p>Envia dados para criar um novo recurso no servidor.</p>
                                 <div class="code-block">
-                                    <pre><code>POST /api/usuarios
+                                    <pre><code class="language-bash">POST /api/usuarios
 {
   "nome": "João",
   "email": "joao@email.com"
@@ -571,7 +653,7 @@ fetch('https://api.exemplo.com/usuarios')
                                 <h4>Atualizar Completamente</h4>
                                 <p>Substitui completamente um recurso existente.</p>
                                 <div class="code-block">
-                                    <pre><code>PUT /api/usuarios/123
+                                    <pre><code class="language-bash">PUT /api/usuarios/123
 {
   "nome": "João Silva",
   "email": "joao.silva@email.com"
@@ -586,7 +668,7 @@ fetch('https://api.exemplo.com/usuarios')
                                 <h4>Atualizar Parcialmente</h4>
                                 <p>Aplica modificações parciais a um recurso.</p>
                                 <div class="code-block">
-                                    <pre><code>PATCH /api/usuarios/123
+                                    <pre><code class="language-bash">PATCH /api/usuarios/123
 {
   "email": "novo@email.com"
 }</code></pre>
@@ -600,7 +682,7 @@ fetch('https://api.exemplo.com/usuarios')
                                 <h4>Remover Dados</h4>
                                 <p>Remove um recurso específico do servidor.</p>
                                 <div class="code-block">
-                                    <pre><code>DELETE /api/usuarios/123</code></pre>
+                                    <pre><code class="language-bash">DELETE /api/usuarios/123</code></pre>
                                 </div>
                             </div>
                         </div>
@@ -624,7 +706,7 @@ fetch('https://api.exemplo.com/usuarios')
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="code-block">
-                                    <pre><code>Content-Type: application/json
+                                    <pre><code class="language-http">Content-Type: application/json
 Accept: application/json
 Authorization: Bearer token123
 User-Agent: MeuApp/1.0</code></pre>
@@ -644,7 +726,7 @@ User-Agent: MeuApp/1.0</code></pre>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="code-block">
-                                    <pre><code>Content-Type: application/json
+                                    <pre><code class="language-http">Content-Type: application/json
 Content-Length: 1234
 Cache-Control: no-cache
 Server: nginx/1.18</code></pre>
@@ -680,7 +762,7 @@ Server: nginx/1.18</code></pre>
                                 <h4>Query Parameters</h4>
                                 <p>Anexados ao final da URL após um "?"</p>
                                 <div class="code-block">
-                                    <pre><code>GET /api/produtos?
+                                    <pre><code class="language-bash">GET /api/produtos?
 categoria=eletronicos&
 ordenar_por=preco&
 limite=10</code></pre>
@@ -692,7 +774,7 @@ limite=10</code></pre>
                                 <h4>Path Parameters</h4>
                                 <p>Incorporados na estrutura da URL</p>
                                 <div class="code-block">
-                                    <pre><code>GET /api/usuarios/123
+                                    <pre><code class="language-bash">GET /api/usuarios/123
 PUT /api/produtos/camiseta-azul</code></pre>
                                 </div>
                                 <small class="text-muted">Usado para identificar recursos específicos</small>
@@ -702,7 +784,7 @@ PUT /api/produtos/camiseta-azul</code></pre>
                                 <h4>Request Body</h4>
                                 <p>Dados enviados no corpo da requisição</p>
                                 <div class="code-block">
-                                    <pre><code>POST /api/usuarios
+                                    <pre><code class="language-json">POST /api/usuarios
 {
   "nome": "Ana",
   "email": "ana@email.com",
@@ -775,7 +857,7 @@ PUT /api/produtos/camiseta-azul</code></pre>
                         
                         <h4>Exemplo de Resposta</h4>
                         <div class="code-block">
-                            <pre><code>HTTP/1.1 200 OK
+                            <pre><code class="language-http">HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 156
 
@@ -808,7 +890,7 @@ Content-Length: 156
                                 <h4>API Key</h4>
                                 <p>Token único que identifica o projeto ou aplicação</p>
                                 <div class="code-block">
-                                    <pre><code>GET /api/dados
+                                    <pre><code class="language-bash">GET /api/dados
 X-API-Key: sua_chave_aqui</code></pre>
                                 </div>
                                 <small class="text-muted">✅ Simples de implementar<br>❌ Menos segura</small>
@@ -818,7 +900,7 @@ X-API-Key: sua_chave_aqui</code></pre>
                                 <h4>Bearer Token</h4>
                                 <p>Token de acesso obtido após autenticação</p>
                                 <div class="code-block">
-                                    <pre><code>GET /api/perfil
+                                    <pre><code class="language-bash">GET /api/perfil
 Authorization: Bearer eyJhbGc...</code></pre>
                                 </div>
                                 <small class="text-muted">✅ Mais seguro<br>✅ Tempo de vida limitado</small>
@@ -828,7 +910,7 @@ Authorization: Bearer eyJhbGc...</code></pre>
                                 <h4>Basic Auth</h4>
                                 <p>Usuário e senha codificados em Base64</p>
                                 <div class="code-block">
-                                    <pre><code>GET /api/recursos
+                                    <pre><code class="language-bash">GET /api/recursos
 Authorization: Basic dXN1YXJpbz...</code></pre>
                                 </div>
                                 <small class="text-muted">✅ Amplamente suportado<br>❌ Apenas codificado</small>
@@ -838,7 +920,7 @@ Authorization: Basic dXN1YXJpbz...</code></pre>
                                 <h4>OAuth 2.0</h4>
                                 <p>Framework de autorização para acesso delegado</p>
                                 <div class="code-block">
-                                    <pre><code>// Fluxo OAuth
+                                    <pre><code class="language-bash">// Fluxo OAuth
 1. Autorização
 2. Troca por token
 3. Uso do token</code></pre>
@@ -864,7 +946,7 @@ Authorization: Basic dXN1YXJpbz...</code></pre>
                                 <h3>JSON</h3>
                                 <p>JavaScript Object Notation - formato leve e fácil de ler</p>
                                 <div class="code-block">
-                                    <pre><code>{
+                                    <pre><code class="language-json">{
   "nome": "Alice",
   "idade": 30,
   "cidade": "São Paulo",
@@ -886,7 +968,7 @@ Authorization: Basic dXN1YXJpbz...</code></pre>
                                 <h3>XML</h3>
                                 <p>Extensible Markup Language - formato estruturado com tags</p>
                                 <div class="code-block">
-                                    <pre><code>&lt;pessoa&gt;
+                                    <pre><code class="language-xml">&lt;pessoa&gt;
   &lt;nome&gt;Bob&lt;/nome&gt;
   &lt;idade&gt;25&lt;/idade&gt;
   &lt;cidade&gt;Rio de Janeiro&lt;/cidade&gt;
@@ -922,7 +1004,7 @@ Authorization: Basic dXN1YXJpbz...</code></pre>
                         
                         <h4>Estrutura de uma URL de API</h4>
                         <div class="code-block">
-                            <pre><code>https://api.example.com/v1/usuarios/123?incluir_pedidos=true
+                            <pre><code class="language-uri">https://api.example.com/v1/usuarios/123?incluir_pedidos=true
 │      │               │  │        │   │
 │      │               │  │        │   └─ Query Parameter
 │      │               │  │        └─ Path Parameter (ID)
@@ -936,7 +1018,7 @@ Authorization: Basic dXN1YXJpbz...</code></pre>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="code-block">
-                                    <pre><code>GET /produtos
+                                    <pre><code class="language-bash">GET /produtos
 GET /produtos/123
 POST /produtos
 PUT /produtos/123
@@ -945,7 +1027,7 @@ DELETE /produtos/123</code></pre>
                             </div>
                             <div class="col-md-6">
                                 <div class="code-block">
-                                    <pre><code>GET /usuarios
+                                    <pre><code class="language-bash">GET /usuarios
 GET /usuarios/456/pedidos
 POST /usuarios/456/pedidos
 GET /categorias
@@ -979,7 +1061,7 @@ POST /auth/login</code></pre>
                         
                         <h4>Headers de Rate Limiting</h4>
                         <div class="code-block">
-                            <pre><code>HTTP/1.1 200 OK
+                            <pre><code class="language-http">HTTP/1.1 200 OK
 X-RateLimit-Limit: 60
 X-RateLimit-Remaining: 58
 X-RateLimit-Reset: 1678886400
@@ -991,7 +1073,7 @@ X-RateLimit-Reset: 1678886400
                         
                         <h4>Resposta quando limite é excedido</h4>
                         <div class="code-block">
-                            <pre><code>HTTP/1.1 429 Too Many Requests
+                            <pre><code class="language-http">HTTP/1.1 429 Too Many Requests
 X-RateLimit-Limit: 60
 X-RateLimit-Remaining: 0
 X-RateLimit-Reset: 1678886460
@@ -1021,7 +1103,7 @@ X-RateLimit-Reset: 1678886460
                             <div class="col-md-6">
                                 <h4>API Tradicional (Polling)</h4>
                                 <div class="code-block">
-                                    <pre><code>// Cliente pergunta constantemente
+                                    <pre><code class="language-javascript">// Cliente pergunta constantemente
 setInterval(() => {
   fetch('/api/novos-pedidos')
     .then(response => response.json())
@@ -1038,7 +1120,7 @@ setInterval(() => {
                             <div class="col-md-6">
                                 <h4>Webhook</h4>
                                 <div class="code-block">
-                                    <pre><code>// Servidor notifica quando acontece
+                                    <pre><code class="language-javascript">// Servidor notifica quando acontece
 app.post('/webhook/novo-pedido', (req, res) => {
   const pedido = req.body;
   processarPedido(pedido);
