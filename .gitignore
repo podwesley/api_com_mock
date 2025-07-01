@@ -10,7 +10,7 @@ __pycache__/
 
 # Banco de Dados
 # O banco de dados é populado na primeira execução, não deve ser versionado.
-src/database/app.db
+# src/database/app.db
 
 # Arquivos de IDE e editores
 .vscode/
