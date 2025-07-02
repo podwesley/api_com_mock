@@ -11,7 +11,48 @@ enderecos_bp = Blueprint('enderecos', __name__)
 @enderecos_bp.route('/enderecos', methods=['GET'])
 @token_required
 def listar_enderecos():
-    """Lista todos os endereços com paginação e filtros"""
+    """
+    Lista todos os endereços com paginação e filtros.
+    ---
+    tags:
+      - Endereços
+    security:
+      - Bearer: []
+    parameters:
+      - name: page
+        in: query
+        type: integer
+        description: "Número da página"
+      - name: per_page
+        in: query
+        type: integer
+        description: "Itens por página"
+      - name: pessoa_id
+        in: query
+        type: integer
+        description: "ID da pessoa para filtrar endereços"
+      - name: cidade
+        in: query
+        type: string
+        description: "Filtrar por cidade"
+      - name: estado
+        in: query
+        type: string
+        description: "Filtrar por estado"
+      - name: tipo
+        in: query
+        type: string
+        description: "Filtrar por tipo de endereço (e.g., Residencial, Comercial)"
+      - name: ativo
+        in: query
+        type: boolean
+        description: "Filtrar por status de atividade"
+    responses:
+      200:
+        description: "Lista de endereços"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         # Simula erro 500 ocasionalmente (3% das vezes)
         if random.random() < 0.03:
@@ -70,7 +111,27 @@ def listar_enderecos():
 @enderecos_bp.route('/enderecos/<int:endereco_id>', methods=['GET'])
 @token_required
 def obter_endereco(endereco_id):
-    """Obtém um endereço específico"""
+    """
+    Obtém um endereço específico.
+    ---
+    tags:
+      - Endereços
+    security:
+      - Bearer: []
+    parameters:
+      - name: endereco_id
+        in: path
+        type: integer
+        required: true
+        description: "ID do endereço"
+    responses:
+      200:
+        description: "Detalhes do endereço"
+      404:
+        description: "Endereço não encontrado"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         # Simula erro 404 para IDs específicos
         if endereco_id in [999, 1000, 9999]:
@@ -93,7 +154,29 @@ def obter_endereco(endereco_id):
 @enderecos_bp.route('/enderecos', methods=['POST'])
 @token_required
 def criar_endereco():
-    """Cria um novo endereço"""
+    """
+    Cria um novo endereço.
+    ---
+    tags:
+      - Endereços
+    security:
+      - Bearer: []
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Endereco'
+    responses:
+      201:
+        description: "Endereço criado com sucesso"
+      400:
+        description: "Dados inválidos"
+      404:
+        description: "Pessoa não encontrada"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         data = request.get_json()
         
@@ -145,7 +228,34 @@ def criar_endereco():
 @enderecos_bp.route('/enderecos/<int:endereco_id>', methods=['PUT'])
 @token_required
 def atualizar_endereco(endereco_id):
-    """Atualiza um endereço existente"""
+    """
+    Atualiza um endereço existente.
+    ---
+    tags:
+      - Endereços
+    security:
+      - Bearer: []
+    parameters:
+      - name: endereco_id
+        in: path
+        type: integer
+        required: true
+        description: "ID do endereço"
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Endereco'
+    responses:
+      200:
+        description: "Endereço atualizado com sucesso"
+      400:
+        description: "Dados inválidos"
+      404:
+        description: "Endereço não encontrado"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         endereco = Endereco.query.get(endereco_id)
         
@@ -199,14 +309,61 @@ def atualizar_endereco(endereco_id):
 @enderecos_bp.route('/enderecos/<int:endereco_id>', methods=['PATCH'])
 @token_required
 def atualizar_endereco_parcial(endereco_id):
-    """Atualiza parcialmente um endereço existente"""
+    """
+    Atualiza parcialmente um endereço existente.
+    ---
+    tags:
+      - Endereços
+    security:
+      - Bearer: []
+    parameters:
+      - name: endereco_id
+        in: path
+        type: integer
+        required: true
+        description: "ID do endereço"
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Endereco'
+    responses:
+      200:
+        description: "Endereço atualizado com sucesso"
+      400:
+        description: "Dados inválidos"
+      404:
+        description: "Endereço não encontrado"
+      500:
+        description: "Erro interno do servidor"
+    """
     # Reutiliza a lógica do PUT
     return atualizar_endereco(endereco_id)
 
 @enderecos_bp.route('/enderecos/<int:endereco_id>', methods=['DELETE'])
 @token_required
 def deletar_endereco(endereco_id):
-    """Deleta um endereço"""
+    """
+    Deleta um endereço.
+    ---
+    tags:
+      - Endereços
+    security:
+      - Bearer: []
+    parameters:
+      - name: endereco_id
+        in: path
+        type: integer
+        required: true
+        description: "ID do endereço"
+    responses:
+      200:
+        description: "Endereço deletado com sucesso"
+      404:
+        description: "Endereço não encontrado"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         endereco = Endereco.query.get(endereco_id)
         
@@ -228,7 +385,27 @@ def deletar_endereco(endereco_id):
 @enderecos_bp.route('/pessoas/<int:pessoa_id>/enderecos', methods=['GET'])
 @token_required
 def listar_enderecos_pessoa(pessoa_id):
-    """Lista todos os endereços de uma pessoa específica"""
+    """
+    Lista todos os endereços de uma pessoa específica.
+    ---
+    tags:
+      - Endereços
+    security:
+      - Bearer: []
+    parameters:
+      - name: pessoa_id
+        in: path
+        type: integer
+        required: true
+        description: "ID da pessoa"
+    responses:
+      200:
+        description: "Lista de endereços da pessoa"
+      404:
+        description: "Pessoa não encontrada"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         # Verifica se a pessoa existe
         pessoa = Pessoa.query.get(pessoa_id)
@@ -249,7 +426,19 @@ def listar_enderecos_pessoa(pessoa_id):
 @enderecos_bp.route('/enderecos/stats', methods=['GET'])
 @token_required
 def estatisticas_enderecos():
-    """Retorna estatísticas dos endereços"""
+    """
+    Retorna estatísticas dos endereços.
+    ---
+    tags:
+      - Endereços
+    security:
+      - Bearer: []
+    responses:
+      200:
+        description: "Estatísticas de endereços"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         total = Endereco.query.count()
         ativos = Endereco.query.filter_by(ativo=True).count()

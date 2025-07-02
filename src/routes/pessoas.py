@@ -10,7 +10,44 @@ pessoas_bp = Blueprint('pessoas', __name__)
 @pessoas_bp.route('/pessoas', methods=['GET'])
 @token_required
 def listar_pessoas():
-    """Lista todas as pessoas com paginação e filtros"""
+    """
+    Lista todas as pessoas com paginação e filtros.
+    ---
+    tags:
+      - Pessoas
+    security:
+      - Bearer: []
+    parameters:
+      - name: page
+        in: query
+        type: integer
+        description: "Número da página"
+      - name: per_page
+        in: query
+        type: integer
+        description: "Itens por página"
+      - name: nome
+        in: query
+        type: string
+        description: "Filtrar por nome"
+      - name: email
+        in: query
+        type: string
+        description: "Filtrar por email"
+      - name: ativo
+        in: query
+        type: boolean
+        description: "Filtrar por status de atividade"
+      - name: profissao
+        in: query
+        type: string
+        description: "Filtrar por profissão"
+    responses:
+      200:
+        description: "Lista de pessoas"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         # Simula erro 500 ocasionalmente (3% das vezes)
         if random.random() < 0.03:
@@ -66,7 +103,27 @@ def listar_pessoas():
 @pessoas_bp.route('/pessoas/<int:pessoa_id>', methods=['GET'])
 @token_required
 def obter_pessoa(pessoa_id):
-    """Obtém uma pessoa específica"""
+    """
+    Obtém uma pessoa específica.
+    ---
+    tags:
+      - Pessoas
+    security:
+      - Bearer: []
+    parameters:
+      - name: pessoa_id
+        in: path
+        type: integer
+        required: true
+        description: "ID da pessoa"
+    responses:
+      200:
+        description: "Detalhes da pessoa"
+      404:
+        description: "Pessoa não encontrada"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         # Simula erro 404 para IDs específicos
         if pessoa_id in [999, 1000, 9999]:
@@ -89,7 +146,29 @@ def obter_pessoa(pessoa_id):
 @pessoas_bp.route('/pessoas', methods=['POST'])
 @token_required
 def criar_pessoa():
-    """Cria uma nova pessoa"""
+    """
+    Cria uma nova pessoa.
+    ---
+    tags:
+      - Pessoas
+    security:
+      - Bearer: []
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Pessoa'
+    responses:
+      201:
+        description: "Pessoa criada com sucesso"
+      400:
+        description: "Dados inválidos"
+      409:
+        description: "Email ou CPF já cadastrado"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         data = request.get_json()
         
@@ -138,7 +217,36 @@ def criar_pessoa():
 @pessoas_bp.route('/pessoas/<int:pessoa_id>', methods=['PUT'])
 @token_required
 def atualizar_pessoa(pessoa_id):
-    """Atualiza uma pessoa existente"""
+    """
+    Atualiza uma pessoa existente.
+    ---
+    tags:
+      - Pessoas
+    security:
+      - Bearer: []
+    parameters:
+      - name: pessoa_id
+        in: path
+        type: integer
+        required: true
+        description: "ID da pessoa"
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Pessoa'
+    responses:
+      200:
+        description: "Pessoa atualizada com sucesso"
+      400:
+        description: "Dados inválidos"
+      404:
+        description: "Pessoa não encontrada"
+      409:
+        description: "Email ou CPF já cadastrado"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         pessoa = Pessoa.query.get(pessoa_id)
         
@@ -194,14 +302,63 @@ def atualizar_pessoa(pessoa_id):
 @pessoas_bp.route('/pessoas/<int:pessoa_id>', methods=['PATCH'])
 @token_required
 def atualizar_pessoa_parcial(pessoa_id):
-    """Atualiza parcialmente uma pessoa existente"""
+    """
+    Atualiza parcialmente uma pessoa existente.
+    ---
+    tags:
+      - Pessoas
+    security:
+      - Bearer: []
+    parameters:
+      - name: pessoa_id
+        in: path
+        type: integer
+        required: true
+        description: "ID da pessoa"
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Pessoa'
+    responses:
+      200:
+        description: "Pessoa atualizada com sucesso"
+      400:
+        description: "Dados inválidos"
+      404:
+        description: "Pessoa não encontrada"
+      409:
+        description: "Email ou CPF já cadastrado"
+      500:
+        description: "Erro interno do servidor"
+    """
     # Reutiliza a lógica do PUT
     return atualizar_pessoa(pessoa_id)
 
 @pessoas_bp.route('/pessoas/<int:pessoa_id>', methods=['DELETE'])
 @token_required
 def deletar_pessoa(pessoa_id):
-    """Deleta uma pessoa"""
+    """
+    Deleta uma pessoa.
+    ---
+    tags:
+      - Pessoas
+    security:
+      - Bearer: []
+    parameters:
+      - name: pessoa_id
+        in: path
+        type: integer
+        required: true
+        description: "ID da pessoa"
+    responses:
+      200:
+        description: "Pessoa deletada com sucesso"
+      404:
+        description: "Pessoa não encontrada"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         pessoa = Pessoa.query.get(pessoa_id)
         
@@ -223,7 +380,19 @@ def deletar_pessoa(pessoa_id):
 @pessoas_bp.route('/pessoas/stats', methods=['GET'])
 @token_required
 def estatisticas_pessoas():
-    """Retorna estatísticas das pessoas"""
+    """
+    Retorna estatísticas das pessoas.
+    ---
+    tags:
+      - Pessoas
+    security:
+      - Bearer: []
+    responses:
+      200:
+        description: "Estatísticas de pessoas"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         total = Pessoa.query.count()
         ativas = Pessoa.query.filter_by(ativo=True).count()

@@ -197,6 +197,12 @@ Lista endereços de uma pessoa específica.
 
 ## 🔧 Como Usar
 
+### Swagger UI
+
+Para acessar a documentação interativa da API (Swagger UI), inicie a aplicação e acesse a seguinte URL no seu navegador:
+
+[http://localhost:5000/apidocs](http://localhost:5000/apidocs)
+
 ### Docker. configure a porta no compose - IMPORTANTEEEEE 
 
 - **docker build -t api-mockada .** 

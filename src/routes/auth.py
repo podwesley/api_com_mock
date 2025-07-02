@@ -47,7 +47,63 @@ def token_required(f):
 
 @auth_bp.route('/auth/login', methods=['POST'])
 def login():
-    """Endpoint de login"""
+    """
+    Endpoint de login para autenticação de usuários.
+    ---
+    tags:
+      - Autenticação
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            username:
+              type: string
+              description: Nome de usuário.
+              example: "admin"
+            password:
+              type: string
+              description: Senha do usuário.
+              example: "admin"
+    responses:
+      200:
+        description: Login realizado com sucesso.
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Login realizado com sucesso"
+            token:
+              type: string
+              example: "..."
+            expires_at:
+              type: string
+              example: "..."
+            user:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                username:
+                  type: string
+                  example: "admin"
+                email:
+                  type: string
+                  example: "admin@example.com"
+                ativo:
+                  type: boolean
+                  example: true
+      400:
+        description: "Username e password são obrigatórios"
+      401:
+        description: "Credenciais inválidas ou usuário inativo"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         data = request.get_json()
         
@@ -84,7 +140,19 @@ def login():
 @auth_bp.route('/auth/logout', methods=['POST'])
 @token_required
 def logout():
-    """Endpoint de logout"""
+    """
+    Endpoint de logout para invalidar o token de acesso.
+    ---
+    tags:
+      - Autenticação
+    security:
+      - Bearer: []
+    responses:
+      200:
+        description: "Logout realizado com sucesso"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         # Pega o token do header
         auth_header = request.headers.get('Authorization')
@@ -104,7 +172,23 @@ def logout():
 @auth_bp.route('/auth/me', methods=['GET'])
 @token_required
 def me():
-    """Retorna informações do usuário atual"""
+    """
+    Retorna informações do usuário autenticado.
+    ---
+    tags:
+      - Autenticação
+    security:
+      - Bearer: []
+    responses:
+      200:
+        description: "Informações do usuário"
+        schema:
+          $ref: '#/definitions/Usuario'
+      401:
+        description: "Token inválido ou expirado"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         return jsonify({
             'user': request.current_user.to_dict()
@@ -116,7 +200,31 @@ def me():
 @auth_bp.route('/auth/refresh', methods=['POST'])
 @token_required
 def refresh_token():
-    """Renova o token"""
+    """
+    Renova o token de acesso.
+    ---
+    tags:
+      - Autenticação
+    security:
+      - Bearer: []
+    responses:
+      200:
+        description: "Token renovado com sucesso"
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Token renovado com sucesso"
+            token:
+              type: string
+            expires_at:
+              type: string
+      401:
+        description: "Token inválido ou expirado"
+      500:
+        description: "Erro interno do servidor"
+    """
     try:
         # Cria um novo token
         token = Token.create_token(request.current_user.id)

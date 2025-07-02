@@ -6,9 +6,28 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 from src.database_config import db
+from flasgger import Swagger
 
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
 app.config['SECRET_KEY'] = 'asdf#FGSgvasgf$5$WGT'
+app.config['SWAGGER'] = {
+    'title': 'API Mockada',
+    'uiversion': 3,
+    'securityDefinitions': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'Token de autorização JWT. Exemplo: "Bearer {token}"'
+        }
+    },
+    'security': [
+        {
+            'Bearer': []
+        }
+    ]
+}
+swagger = Swagger(app)
 
 # Configurar CORS para permitir requisições do frontend
 CORS(app, origins="*")
